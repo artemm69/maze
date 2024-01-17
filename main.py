@@ -1,3 +1,4 @@
+
 # импортируем библиотеку pygame
 import pygame
 # импортируем библиотеку random
@@ -163,3 +164,78 @@ def main_menu(screen):
 
                 elif is_button_pressed(button_x, quit_button_y, button_width, button_height, mouse_pos):
                     return "quit"
+# изменение разиеров лабиринта
+def choose_maze_size():
+    print("Введите новую ширину лабиринта:")
+    new_screen_sizex = int(input())
+
+    # проверяем корректность разиера
+    while new_screen_sizex < 300:
+        print("Ширина должна быть не менее 300 пикселей. Попробуйте еще раз:")
+        new_screen_sizex = int(input())
+
+    # задается высота
+    print("Введите новую высоту лабиринта:")
+    new_screen_sizey = int(input())
+
+    # проверяем корректность разиера
+    while new_screen_sizey < 300:
+        print("Высота должна быть не менее 300 пикселей. Попробуйте еще раз:")
+        new_screen_sizey = int(input())
+
+    return new_screen_sizex, new_screen_sizey
+
+
+def get_time(hours, minutes, seconds):
+
+    if len(str(hours)) > 1:
+        a = str(hours)
+
+    else:
+        a = "0" + str(hours)
+
+
+    if len(str(minutes)) > 1:
+        b = str(minutes)
+
+    else:
+        b = "0" + str(minutes)
+
+
+    if len(str(seconds)) > 1:
+        c = str(seconds)
+
+    else:
+        c = "0" + str(seconds)
+
+
+    return a + ":" + b + ":" + c
+
+def draw_time(start_time, pause_time):
+    hours, minutes, seconds = 0, 0, 0
+    current_time = time.time() - pause_time - start_time
+    if current_time > 3600:
+        while True:
+            if current_time - 3600 > 0:
+                hours += 1
+                current_time -= 3600
+            else:
+                while True:
+                    if current_time - 60 > 0:
+                        minutes += 1
+                        current_time -= 60
+                    else:
+                        seconds += int(current_time)
+                        break
+                break
+
+    else:
+        while True:
+            if current_time - 60 > 0:
+                minutes += 1
+                current_time -= 60
+            else:
+                seconds += int(current_time)
+                break
+    return [font1.render(get_time(hours, minutes, seconds), True, (0, 0, 0), (255, 255, 255)),
+            get_time(hours, minutes, seconds)]
