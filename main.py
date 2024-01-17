@@ -244,3 +244,79 @@ class cell:
     def __init__(self, up, down, left, right):
         self.visited = False
         self.walls = [up, down, left, right]
+
+#генерируем лабиринт
+class labyrinth:
+    def __init__(self, id, sizex, sizey):
+        self.id = id
+        self.walls = []
+        self.maze_walls = []
+        self.cells = []
+
+        # Вычисляем количество клеток по горизонтали и вертикали
+        num_cells_x = sizex // 33
+        num_cells_y = sizey // 33
+
+        # задаем x и у
+        x = 0
+        t = 0
+
+        for f in range(num_cells_y):
+            for s in range(num_cells_x):
+                if not (f in (0, 1, 2) and s > num_cells_x):
+                    self.cells.append(cell((x + 8, t, 28, 8), (x + 8, t + 33, 28, 8), (x, t + 8, 8, 28),
+                                           (x + 33, t + 8, 8, 28)))
+                x += 33
+            x = 0
+            t += 33
+
+        # заполняем списки
+        for v in self.cells[0].walls:
+            self.maze_walls.append(v)
+            self.walls.append(v)
+        self.cells[0].visited = True
+
+        while len(self.walls) > 0:
+            wall = random.choice(self.walls)
+            divided_cells = []
+
+            for u in self.cells:
+                if wall in u.walls:
+                    divided_cells.append(u)
+
+            if len(divided_cells) > 1 and (not ((divided_cells[0].visited and divided_cells[1].visited) or
+                                                ((not divided_cells[0].visited)
+                                                 and (not divided_cells[1].visited)))):
+                for k in divided_cells:
+                    k.walls.remove(wall)
+
+                    if k.visited == False:
+                        k.visited = True
+
+                    for q in k.walls:
+                        if not q in self.walls:
+                            self.walls.append(q)
+
+                        if not q in self.maze_walls:
+                            self.maze_walls.append(q)
+
+                    if wall in self.maze_walls:
+                        self.maze_walls.remove(wall)
+
+            self.walls.remove(wall)
+
+        for j in range(0, 720, 33):
+            for i in range(0, 951, 33):
+                self.maze_walls.append((i, j, 8, 8))
+
+    def remove_walls(self, percent):
+        num_walls = int(len(self.walls) * percent / 100)
+        random.shuffle(self.walls)
+        self.walls = self.walls[:num_walls]
+    def draw(self, goal):
+        screen.fill((0, 0, 0))
+        for k in self.maze_walls:
+            pygame.draw.rect(screen, current_maze_color, pygame.Rect(k[0], k[1], k[2], k[3]))
+        pygame.draw.rect(screen, (0, 255, 0), goal)
+
+
