@@ -12,3 +12,4 @@ clock = pygame.time.Clock()
 current_maze_color = (255, 165, 0)
 # Фиолетовый цвет по умолчанию для кубика
 current_cube_color = (128, 0, 128)
+
