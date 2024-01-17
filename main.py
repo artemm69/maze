@@ -4,3 +4,4 @@ import pygame
 import random
 # импортируем библиотеку time
 import time
+# вроде я могу чтото добавлять
