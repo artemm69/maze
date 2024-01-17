@@ -92,3 +92,74 @@ def settings_menu(screen):
         clock.tick(60)
 
 
+def draw_button(screen, text, x, y, width, height, color):
+    """ Рисует кнопку и текст на ней """
+
+    pygame.draw.rect(screen, color, [x, y, width, height])
+    text_surf = menu_font.render(text, True, (255, 255, 255))
+    screen.blit(text_surf, [x + (width - text_surf.get_width()) // 2,
+                            y + (height - text_surf.get_height()) // 2])
+
+def is_button_pressed(x, y, width, height, mouse_pos):
+    """ Проверяет, нажата ли кнопка """
+
+    return x <= mouse_pos[0] <= x + width and y <= mouse_pos[1] <= y + height
+
+# Функция для отображения главного меню
+# оно появляется при запуске
+def main_menu(screen):
+    menu = True
+
+    while menu:
+        screen.fill((0, 0, 0))
+        sizex, sizey = screen.get_size()
+        bg = pygame.image.load("1.jpg")
+
+        screen.blit(bg, (0, 0))
+
+        button_width, button_height = 300, 70
+        button_spacing = 20
+
+        start_button_y = sizey // 2 - (2 * (button_height + button_spacing))
+        size_button_y = start_button_y + button_height + button_spacing
+
+        settings_button_y = size_button_y + button_height + button_spacing
+        quit_button_y = settings_button_y + button_height + button_spacing
+
+        button_x = sizex // 2 - button_width // 2
+
+        # рисуем кнопку (Начать игру)
+        draw_button(screen, "Начать игру", button_x, start_button_y, button_width, button_height,
+                    (100, 200, 100))
+        # рисуем кнопку (Выбрать размер)
+        draw_button(screen, "Выбрать размер", button_x, size_button_y, button_width, button_height,
+                    (100, 200, 100))
+        # рисуем кнопку (Настройки)
+        draw_button(screen, "Настройки", button_x, settings_button_y, button_width, button_height,
+                    (100, 100, 200))
+        # рисуем кнопку (Выход)
+        draw_button(screen, "Выход", button_x, quit_button_y, button_width, button_height,
+                    (200, 100, 100))
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            # прописываем условие выхода
+            if event.type == pygame.QUIT:
+                return "quit"
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+
+                if is_button_pressed(button_x, start_button_y, button_width, button_height, mouse_pos):
+                    return "start"
+
+                elif is_button_pressed(button_x, size_button_y, button_width, button_height, mouse_pos):
+                    return "size"
+
+                elif is_button_pressed(button_x, settings_button_y, button_width, button_height, mouse_pos):
+                    result = settings_menu(screen)
+                    if result == "back":
+                        continue
+
+                elif is_button_pressed(button_x, quit_button_y, button_width, button_height, mouse_pos):
+                    return "quit"
