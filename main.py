@@ -239,3 +239,8 @@ def draw_time(start_time, pause_time):
                 break
     return [font1.render(get_time(hours, minutes, seconds), True, (0, 0, 0), (255, 255, 255)),
             get_time(hours, minutes, seconds)]
+
+class cell:
+    def __init__(self, up, down, left, right):
+        self.visited = False
+        self.walls = [up, down, left, right]
