@@ -415,3 +415,87 @@ def game_loop(screen):
                     if player.colliderect(pygame.Rect(m[0], m[1], m[2], m[3])):
                         move_right = False
                         break
+
+                if move_right:
+                    x += speed
+
+            if goal.colliderect((x, y, 10, 10)):
+                victory = True
+
+            maze.draw(goal)
+            text = draw_time(start, pause_time)
+            pygame.draw.rect(screen, current_cube_color, pygame.Rect(x, y, 10, 10))
+
+            if victory:
+                screen.fill((0, 0, 0))
+                # загружаем фон
+                bg = pygame.image.load("1.jpg")
+                # устанавливаем фон
+                screen.blit(bg, (0, 0))
+
+                #рисуем кнопки
+                # Заняло времени:
+                time_text = font1.render("Заняло времени: " + text[1], True, (255, 255, 255))
+                # ПОБЕДА!
+                victory_text = font2.render("ПОБЕДА!", True, (255, 255, 255))
+                # Возврат в меню...
+                reset = font3.render("(Возврат в меню...)", True, (255, 255, 255))
+
+                #отображаем кнопки
+                # ПОБЕДА!
+                screen.blit(victory_text, (468 - (victory_text.get_width() // 2),
+                                           328 - (victory_text.get_height() // 2)))
+                # Заняло времени:
+                screen.blit(time_text, (468 - (time_text.get_width() // 2),
+                                        (248 - (time_text.get_height() // 2)) + victory_text.get_height()))
+                # Возврат в меню...
+                screen.blit(reset, (468 - (reset.get_width() // 2),
+                                    (248 - (reset.get_height() // 2)) + victory_text.get_height() +
+                                    time_text.get_height()))
+
+                pygame.display.update()
+                time.sleep(2)
+                return "main_menu"
+
+            # Отрисовываем таймер под лабиринтом
+
+            elapsed_time = time.time() - start - pause_time
+
+            hours = int(elapsed_time // 3600)
+            minutes = int((elapsed_time % 3600) // 60)
+            seconds = int((elapsed_time % 3600) % 60)
+
+            timer_surface = font1.render(get_time(hours, minutes, seconds),
+                                         True, (0, 0, 0), (255, 255, 255))
+            timer_rect = timer_surface.get_rect(center=(sizex // 2,
+                                                        sizey - timer_surface.get_height() // 2))
+            screen.blit(timer_surface,
+                        timer_rect)
+
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    return "main_menu"
+
+screen = pygame.display.set_mode((maze_width, maze_height))
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((maze_width, maze_height))
+    main_menu(screen)
+    while True:
+        choice = main_menu(screen)
+
+        if choice == "quit":
+            break
+
+        elif choice == "size":
+            sizex, sizey = choose_maze_size()
+            screen = pygame.display.set_mode((sizex, sizey))
+
+        elif choice == "start":
+            game_loop(screen)
+
+if __name__ == "__main__":
+    main()
