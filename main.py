@@ -320,3 +320,98 @@ class labyrinth:
         pygame.draw.rect(screen, (0, 255, 0), goal)
 
 
+id = 0
+def game_loop(screen):
+    global id
+    id += 1
+
+    # Получаем размеры экрана
+    sizex, sizey = screen.get_size()
+
+    # Создаем лабиринт с учетом размеров экрана
+    maze = labyrinth(id, sizex, sizey - 60)  # Вычитаем 60 пикселей для таймера
+
+    # Адаптируем положение цели к размеру экрана
+    goal = pygame.Rect(sizex - 30, sizey - 90, 25, 25)  # Вычитаем 60 пикселей для таймера
+    x = 16
+    y = 16
+    # Создаем лабиринт с учетом размеров экрана
+    # проверка на победу
+    victory = False
+    # уст скорость
+    speed = 4
+    #**********
+    pause = False
+    #**********
+    pause_time = 0
+
+    start = time.time()
+    #проверка на выполнение
+    done = False
+
+    clock = pygame.time.Clock()
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_p:
+                    pause = not pause
+
+        else:
+            # проверяем возможность паеремещения вверх
+            move_up = True
+            # проверяем возможность паеремещения веиз
+            move_down = True
+            # проверяем возможность паеремещения влево
+            move_left = True
+            # проверяем возможность паеремещения вправо
+            move_right = True
+            pressed = pygame.key.get_pressed()
+
+            # добавляем управление по WASD(W)
+            if pressed[pygame.K_w] or pressed[pygame.K_UP]:
+                for m in maze.maze_walls:
+                    player = pygame.Rect(x, y - speed, 10, 10)
+                    if player.colliderect(pygame.Rect(m[0], m[1], m[2], m[3])):
+                        move_up = False
+                        break
+                if move_up:
+                    y -= speed
+
+            # добавляем управление по WASD(S)
+            if pressed[pygame.K_s] or pressed[pygame.K_DOWN]:
+                player = pygame.Rect(x, y + speed, 10, 10)
+
+                for m in maze.maze_walls:
+
+                    if player.colliderect(pygame.Rect(m[0], m[1], m[2], m[3])):
+                        move_down = False
+                        break
+
+                if move_down:
+                    y += speed
+
+            # добавляем управление по WASD(A)
+            if pressed[pygame.K_a] or pressed[pygame.K_LEFT]:
+
+                player = pygame.Rect(x - speed, y, 10, 10)
+
+                for m in maze.maze_walls:
+
+                    if player.colliderect(pygame.Rect(m[0], m[1], m[2], m[3])):
+                        move_left = False
+                        break
+                if move_left:
+                    x -= speed
+
+            # добавляем управление по WASD(D)
+            if pressed[pygame.K_d] or pressed[pygame.K_RIGHT]:
+
+                player = pygame.Rect(x + speed, y, 10, 10)
+
+                for m in maze.maze_walls:
+                    if player.colliderect(pygame.Rect(m[0], m[1], m[2], m[3])):
+                        move_right = False
+                        break
