@@ -28,3 +28,10 @@ color_options = [
     (128, 0, 128)
     # Фиолетовый
 ]
+maze_width = 930  # Ширина лабиринта
+maze_height = 800  # Высота лабиринта
+# Определение шрифтов
+font1 = pygame.font.SysFont("comicsansms", 49, True)
+font2 = pygame.font.SysFont("comicsansms", 150, True)
+font3 = pygame.font.SysFont("comicsansms", 28, True)
+menu_font = pygame.font.SysFont("comicsansms", 36, True)
